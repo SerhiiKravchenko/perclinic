@@ -3,13 +3,19 @@ pipeline {
   agent any
 
   stages {
-
-  stage('Build') {
-      steps {
-        echo 'Hello, World'
-        git url:'https://github.com/SerhiiKravchenko/perclinic.git', branch:'main'
-      }
+    stage('Checkout') {
+          steps {
+            git url:'https://github.com/SerhiiKravchenko/kube-deploy-app.git', branch:'main'
+          }
     }
-  }
+    stage('Build') {
+          steps {
+            script {
+                checkout scm
+                docker.build(DOCKER_IMAGE)
+            }
+          }
+        }
+    }
 
 }
