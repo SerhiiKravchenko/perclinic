@@ -2,6 +2,11 @@ pipeline {
 
   agent any
 
+  environment {
+          DOCKER_CREDENTIALS_ID = 'dockerhub-credentials'
+          DOCKER_IMAGE = "lashtaj/jenkins:${env.BUILD_ID}"
+      }
+
   stages {
     stage('Checkout') {
           steps {
