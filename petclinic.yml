@@ -21,10 +21,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: spring-petclinic-service
+  name: petclinic-service
 spec:
   selector:
-    app: spring-petclinic
+    app: petclinic
   ports:
     - protocol: TCP
       port: 80
