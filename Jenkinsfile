@@ -36,7 +36,12 @@ pipeline {
 //           }
           steps {
             script {
-              kubernetesDeploy(configs: 'petclinic.yml', kubeconfigId: 'k8config')
+                withCredentials([file(credentialsId: 'k8config', variable: 'KUBECONFIG')]) {
+                                    sh '''
+                                        kubectl --kubeconfig $KUBECONFIG apply -f petclinic.yml
+                                    '''
+                                }
+//               kubernetesDeploy(configs: 'petclinic.yml', kubeconfigId: 'k8config')
             }
           }
     }
