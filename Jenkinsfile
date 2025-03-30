@@ -31,6 +31,9 @@ pipeline {
           }
     }
     stage('Publish') {
+          agent {
+            label 'jenkins'
+          }
           steps {
             script {
               kubernetesDeploy(configs: 'petclinic.yml', kubeconfigId: 'k8config')
