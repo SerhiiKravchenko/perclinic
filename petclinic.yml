@@ -15,7 +15,7 @@ spec:
       containers:
         - name: petclinic
           imagePullPolicy: Always
-          image: lashtaj/jenkins
+          image: lashtaj/jenkins:21
           ports:
             - containerPort: 8080
 ---

@@ -18,6 +18,7 @@ pipeline {
 //             script {
 //                 checkout scm
 //                 docker.build(DOCKER_IMAGE)
+//                     dockerImage.tag('latest')
 //             }
 //           }
 //         }
