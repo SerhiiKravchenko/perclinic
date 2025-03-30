@@ -1,6 +1,6 @@
 pipeline {
 
-  agent any
+  agent { label 'jenkins' }
 
   environment {
           DOCKER_CREDENTIALS_ID = 'dockerhub-credentials'
@@ -30,6 +30,14 @@ pipeline {
              }
           }
     }
+    stage('Publish') {
+          steps {
+            script {
+              kubernetesDeploy(configs: 'petclinic.yml', kubeconfigId: 'k8config')
+            }
+          }
+    }
+
   }
 
 }
