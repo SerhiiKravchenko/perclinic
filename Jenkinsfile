@@ -10,7 +10,7 @@ pipeline {
   stages {
     stage('Checkout') {
           steps {
-            git url:'https://github.com/SerhiiKravchenko/kube-deploy-app.git', branch:'main'
+            git url:'https://github.com/SerhiiKravchenko/perclinic.git', branch:'main'
           }
     }
     stage('Build') {
@@ -21,6 +21,15 @@ pipeline {
             }
           }
         }
+    }
+    stage('Push') {
+          steps {
+             script {
+                docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS_ID) {
+                    docker.image(DOCKER_IMAGE).push()
+                }
+             }
+          }
     }
 
 }
