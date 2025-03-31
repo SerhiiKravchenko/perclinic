@@ -4,45 +4,38 @@ pipeline {
 
   environment {
           DOCKER_CREDENTIALS_ID = 'dockerhub-credentials'
-          DOCKER_IMAGE = "lashtaj/jenkins:${env.BUILD_ID}"
+          DOCKER_IMAGE = 'lashtaj/jenkins'
+          KUBE_CREDENTIALS_ID = 'kubeconfig-credentials'
       }
 
   stages {
-//     stage('Checkout') {
-//           steps {
-//             git url:'https://github.com/SerhiiKravchenko/perclinic.git', branch:'main'
-//           }
-//     }
-//     stage('Build') {
-//           steps {
-//             script {
-//                 checkout scm
-//                 docker.build(DOCKER_IMAGE)
-//                     dockerImage.tag('latest')
-//             }
-//           }
-//         }
-//     stage('Push') {
-//           steps {
-//              script {
-//                 docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS_ID) {
-//                     docker.image(DOCKER_IMAGE).push()
-//                 }
-//              }
-//           }
-//     }
-    stage('Publish') {
-//           agent {
-//             label 'jenkins'
-//           }
+    stage('Build') {
           steps {
             script {
-                withCredentials([file(credentialsId: 'k8config', variable: 'KUBECONFIG')]) {
-                                    sh '''
-                                        kubectl --kubeconfig $KUBECONFIG apply -f petclinic.yml
-                                    '''
-                                }
-//               kubernetesDeploy(configs: 'petclinic.yml', kubeconfigId: 'k8config')
+                checkout scm
+
+                def dockerImage = docker.build('${DOCKER_IMAGE}:${env.BUILD_ID}')
+
+                dockerImage.tag('latest')
+            }
+          }
+        }
+    stage('Push') {
+          steps {
+             script {
+                docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS_ID) {
+                    docker.image('${DOCKER_IMAGE}:${env.BUILD_ID}').push()
+                    docker.image('${DOCKER_IMAGE}:latest').push()
+                }
+             }
+          }
+    }
+    stage('Publish') {
+          steps {
+            script {
+                withCredentials([file(credentialsId: 'kubeconfig-credentials', variable: 'KUBECONFIG')]) {
+                    sh 'kubectl --kubeconfig $KUBECONFIG apply -f petclinic.yml'
+                }
             }
           }
     }
