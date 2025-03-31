@@ -14,7 +14,7 @@ pipeline {
             script {
                 checkout scm
 
-                def dockerImage = docker.build('${DOCKER_IMAGE}:${env.BUILD_ID}')
+                def dockerImage = docker.build("${DOCKER_IMAGE}:${env.BUILD_ID}")
 
                 dockerImage.tag('latest')
             }
@@ -24,8 +24,8 @@ pipeline {
           steps {
              script {
                 docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS_ID) {
-                    docker.image('${DOCKER_IMAGE}:${env.BUILD_ID}').push()
-                    docker.image('${DOCKER_IMAGE}:latest').push()
+                    docker.image("${DOCKER_IMAGE}:${env.BUILD_ID}").push()
+                    docker.image("${DOCKER_IMAGE}:latest").push()
                 }
              }
           }
