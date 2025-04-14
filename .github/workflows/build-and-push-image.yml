@@ -1,0 +1,11 @@
+name: Build and push image to Docker hub
+
+on:
+  push:
+    branches: [ main ]
+jobs:
+  build-and-push-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Say hello to world
+        run: echo "Hello World"
