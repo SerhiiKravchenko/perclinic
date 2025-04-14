@@ -23,6 +23,11 @@ jobs:
         id: vars
         run: echo "GIT_SHA=$(git rev-parse HEAD)" >> $GITHUB_ENV
 
+      - name: Output SHA
+        id: get_commit
+        run: |
+          echo "::set-output name=SHA::$(git rev-parse --short HEAD)"
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
@@ -30,4 +35,4 @@ jobs:
           push: true
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/jenkins:latest
-            ${{ secrets.DOCKER_USERNAME }}/jenkins:${{ steps.vars.outputs.GIT_SHA }}
+            ${{ secrets.DOCKER_USERNAME }}/jenkins:${{ steps.get_commit.outputs.SHA }}
